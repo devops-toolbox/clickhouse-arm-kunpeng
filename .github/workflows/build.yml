@@ -36,19 +36,17 @@ jobs:
         git submodule init
         git submodule update
 
-    - name: ARM toolchain
-      run: |
-        cd ClickHouse
-        mkdir -p build-aarch64/cmake/toolchain/linux-aarch64
-        wget 'https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz?revision=2e88a73f-d233-4f96-b1f4-d8b36e9bb0b9&la=en' -O gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz
-        tar xJf gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz -C cmake/toolchain/linux-aarch64 --strip-components=1
-      
     - name: Build
       run: |
         cd ClickHouse
-        mkdir build-arm64
-        CC=clang-11 CXX=clang++-11 cmake . -Bbuild-arm64 -DCMAKE_TOOLCHAIN_FILE=cmake/linux/toolchain-aarch64.cmake -DCMAKE_BUILD_TYPE=RELEASE
-        ninja -C build-arm64
+        # define a directory for the output artifacts
+        output_dir="build_results"
+        # a simplest build
+        ./docker/packager/packager --package-type=binary --output-dir "$output_dir"
+        # build debian packages
+        ./docker/packager/packager --package-type=deb --output-dir "$output_dir"
+        # by default, debian packages use thin LTO, so we can override it to speed up the build
+        CMAKE_FLAGS='-DENABLE_THINLTO=' ./docker/packager/packager --package-type=deb --output-dir "./$(git rev-parse --show-cdup)/build_results"
 
     - name: Create Release
       id: create_release
