@@ -1,5 +1,5 @@
 FROM ubuntu:20.04
-ADD clickhouse.tar.xz /usr/bin
+ADD ck.tar.xz /usr/bin
 COPY config/clickhouse-server /etc/clickhouse-server
 COPY config/clickhouse-client /etc/clickhouse-client
 COPY config/clickhouse-keeper /etc/clickhouse-keeper
