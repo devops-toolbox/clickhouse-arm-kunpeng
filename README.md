@@ -1,9 +1,15 @@
-# clickhouse-arm
+# Step
+1. init build environment
+init.sh
+2. get clickhouse repo and library
+repo.sh
+3. build binary from repo(linux/amd64,default is current platform)
+build.sh
+4. build binary from repo (linux/arm64 cross build on linux/amd64)
 
-Compiling Clickhouse for ARM architectures using GitHub Actions.
+kunpeng arm64 is base on arm v8.2 but not have sse4.2 and rcpc
 
-Build takes around 2 hours using a 2 core Xeon machine. It is triggered manually.
+build-arm.sh
 
-The following links helped for setting up the build pipeline:
-* [How to Build ClickHouse on Linux ](https://clickhouse.tech/docs/en/development/build/)
-* [How to Build ClickHouse on Linux for AARCH64 (ARM64) Architecture](https://clickhouse.tech/docs/en/development/build-cross-arm/)
+5. make docker image like clickhouse/clickhouse-server
+make-docker.sh
